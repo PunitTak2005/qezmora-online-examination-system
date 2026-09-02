@@ -1,0 +1,16 @@
+NODE_ENV=production
+
+PORT=10000
+
+MONGO_URI=mongodb+srv://Punit:JdHhJ9JvcEKLyTWW@cluster0.rf9mdc2.mongodb.net/qezmora?retryWrites=true&w=majority&appName=Cluster0
+
+JWT_SECRET=your_super_secure_random_64_character_secret_key_here
+JWT_EXPIRE=30d
+
+FRONTEND_URL=https://qezmora.vercel.app
+
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=punittak2005@gmail.com
+EMAIL_PASS=xkda lycf nugt fxbg
+EMAIL_FROM=Qezmora <punittak2005@gmail.com>

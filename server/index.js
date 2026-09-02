@@ -86,11 +86,21 @@ if (process.env.NODE_ENV === 'development') {
 // Set static folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Root status endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Qezmora Backend is running.',
+    version: '1.0.0',
+    api: '/api/health'
+  });
+});
+
 // Health check endpoint for Render
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
-    service: 'Qezmora Backend API',
+    service: 'Qezmora Backend',
     environment: process.env.NODE_ENV || 'production',
     timestamp: new Date().toISOString()
   });

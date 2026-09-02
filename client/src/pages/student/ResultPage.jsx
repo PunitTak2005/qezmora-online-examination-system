@@ -5,6 +5,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Download, ChevronLeft, CheckCircle, XCircle, MinusCircle, Clock, Award, BarChart3, RotateCcw } from 'lucide-react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { LightPieTooltip } from '../../components/common/LightChartTooltip';
 import api from '../../api/axios';
 import PageTransition from '../../components/PageTransition';
 import { motion } from 'framer-motion';
@@ -238,9 +239,7 @@ const ResultPage = () => {
                   <Pie data={pieData} innerRadius={55} outerRadius={80} paddingAngle={5} dataKey="value" stroke="none">
                     {pieData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                   </Pie>
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
-                  />
+                  <Tooltip content={<LightPieTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
               

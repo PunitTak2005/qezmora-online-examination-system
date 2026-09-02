@@ -5,6 +5,7 @@ import PageTransition from '../../components/PageTransition';
 import PerformanceTrendChart from '../../components/PerformanceTrendChart';
 import { BookOpen, Target, Award, CheckCircle } from 'lucide-react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
+import { LightPieTooltip } from '../../components/common/LightChartTooltip';
 import api from '../../api/axios';
 
 const ALL_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -155,7 +156,7 @@ const StudentDashboard = () => {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: '#0B1220', color: '#F8FAFC', borderRadius: '12px' }} />
+                  <Tooltip content={<LightPieTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             </div>

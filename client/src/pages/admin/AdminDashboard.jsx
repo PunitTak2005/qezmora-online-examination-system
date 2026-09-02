@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, GraduationCap, Briefcase, FileText, CheckCircle, BarChart2, Activity, Award, Mail, RefreshCcw, AlertTriangle } from 'lucide-react';
 import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { LightPieTooltip } from '../../components/common/LightChartTooltip';
 import api from '../../api/axios';
 import PageTransition from '../../components/PageTransition';
 import StatCard from '../../components/StatCard';
@@ -127,10 +128,7 @@ const AdminDashboard = () => {
                   >
                     {stats.passVsFail?.map((entry, idx) => <Cell key={idx} fill={COLORS[idx % COLORS.length]} />)}
                   </Pie>
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
-                    itemStyle={{ fontWeight: 'bold', color: '#111827' }}
-                  />
+                  <Tooltip content={<LightPieTooltip />} />
                   <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '14px', fontWeight: 'bold', color: '#4B5563' }} />
                 </PieChart>
               </ResponsiveContainer>

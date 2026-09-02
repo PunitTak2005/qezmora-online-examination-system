@@ -22,20 +22,20 @@ const CustomTooltip = ({ active, payload, label }) => {
     const fullMonthName = FULL_MONTH_NAMES_MAP[label] || label;
 
     return (
-      <div className="bg-white/95 dark:bg-[#162032]/95 border border-gray-200/80 dark:border-[#2A3441] p-4 rounded-2xl shadow-xl backdrop-blur-md min-w-[170px] transition-all duration-150">
-        <div className="flex items-center justify-between gap-3 mb-1.5">
-          <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+      <div className="bg-white border border-gray-200 p-3.5 rounded-xl shadow-xl z-50 min-w-[160px] transition-all duration-150 pointer-events-none text-left">
+        <div className="flex items-center justify-between gap-3 mb-1.5 border-b border-gray-100 pb-1">
+          <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
             {fullMonthName}
           </span>
-          <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="inline-flex items-center gap-1 text-[10px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full uppercase">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
             Live
           </span>
         </div>
-        <div className="text-2xl font-black text-[#0F5132] dark:text-[#D4A017] tracking-tight">
+        <div className="text-2xl font-black text-gray-900 tracking-tight">
           {value}%
         </div>
-        <div className="text-[11px] font-semibold text-gray-400 dark:text-gray-400 mt-0.5">
+        <div className="text-xs font-semibold text-gray-500 mt-0.5">
           Average Score
         </div>
       </div>

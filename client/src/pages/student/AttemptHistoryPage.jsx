@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { History, Search, Filter, ChevronLeft, ChevronRight, CheckCircle, XCircle, Clock, Calendar, HelpCircle, Award, ArrowRight, Sparkles, RefreshCcw } from 'lucide-react';
 import api from '../../api/axios';
+import { formatAttemptDate, formatTimeTaken } from '../../utils/dateUtils';
 import PageTransition from '../../components/PageTransition';
 import LoadingSkeleton from '../../components/LoadingSkeleton';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -235,14 +236,14 @@ const AttemptHistoryPage = () => {
                     </div>
 
                     {/* ─── Submission Timestamp & Time Taken ─── */}
-                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-6 pt-3 border-t border-gray-100 dark:border-gray-800/80">
+                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-6 pt-3 border-t border-gray-100 dark:border-gray-800/80 font-medium">
                       <div className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                        <span>{formatDate(attempt.submittedAt)}</span>
+                        <Calendar className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                        <span>{formatAttemptDate(attempt.submittedAt || attempt.startedAt || attempt.createdAt)}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-gray-400" />
-                        <span>{formatDuration(attempt.timeTaken)}</span>
+                        <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                        <span>{formatTimeTaken(attempt.timeTaken)}</span>
                       </div>
                     </div>
 

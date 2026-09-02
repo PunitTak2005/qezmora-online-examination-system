@@ -11,22 +11,23 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/onlineexam';
 
+// Realistic attempts timeline relative to current date
 const studentExamsConfig = [
-  { title: 'React Fundamentals', category: 'Programming', score: 94, timeTakenMinutes: 38, daysAgo: 0 },
-  { title: 'JavaScript Essentials', category: 'Programming', score: 91, timeTakenMinutes: 27, daysAgo: 1 },
-  { title: 'Python Programming', category: 'Programming', score: 88, timeTakenMinutes: 49, daysAgo: 4 },
-  { title: 'Full Stack Web Development Assessment', category: 'Programming', score: 86, timeTakenMinutes: 52, daysAgo: 8 },
-  { title: 'Algebra Mastery', category: 'Mathematics', score: 82, timeTakenMinutes: 25, daysAgo: 12 },
-  { title: 'Calculus Challenge', category: 'Mathematics', score: 78, timeTakenMinutes: 42, daysAgo: 18 },
-  { title: 'Physics Concepts', category: 'Science', score: 84, timeTakenMinutes: 35, daysAgo: 25 },
-  { title: 'Chemistry Fundamentals', category: 'Science', score: 89, timeTakenMinutes: 29, daysAgo: 32 },
-  { title: 'Biology Essentials', category: 'Science', score: 92, timeTakenMinutes: 31, daysAgo: 40 },
-  { title: 'English Grammar', category: 'English', score: 95, timeTakenMinutes: 18, daysAgo: 50 },
-  { title: 'Reading Comprehension', category: 'English', score: 90, timeTakenMinutes: 22, daysAgo: 60 },
-  { title: 'Quantitative Aptitude', category: 'Aptitude', score: 87, timeTakenMinutes: 31, daysAgo: 72 },
-  { title: 'Logical Reasoning', category: 'Aptitude', score: 91, timeTakenMinutes: 24, daysAgo: 84 },
-  { title: 'Current Affairs', category: 'General Knowledge', score: 85, timeTakenMinutes: 28, daysAgo: 95 },
-  { title: 'Indian Constitution', category: 'General Knowledge', score: 88, timeTakenMinutes: 30, daysAgo: 105 }
+  { title: 'React Fundamentals', category: 'Programming', score: 94, timeTakenMinutes: 38, daysAgo: 0, hour: 9, min: 45 },
+  { title: 'JavaScript Essentials', category: 'Programming', score: 91, timeTakenMinutes: 27, daysAgo: 1, hour: 18, min: 20 },
+  { title: 'Python Programming', category: 'Programming', score: 88, timeTakenMinutes: 49, daysAgo: 3, hour: 14, min: 10 },
+  { title: 'Full Stack Web Development Assessment', category: 'Programming', score: 86, timeTakenMinutes: 52, daysAgo: 7, hour: 11, min: 30 },
+  { title: 'Algebra Mastery', category: 'Mathematics', score: 82, timeTakenMinutes: 25, daysAgo: 13, hour: 16, min: 45 },
+  { title: 'Calculus Challenge', category: 'Mathematics', score: 78, timeTakenMinutes: 42, daysAgo: 21, hour: 10, min: 15 },
+  { title: 'Physics Concepts', category: 'Science', score: 84, timeTakenMinutes: 35, daysAgo: 36, hour: 15, min: 20 },
+  { title: 'Chemistry Fundamentals', category: 'Science', score: 89, timeTakenMinutes: 29, daysAgo: 46, hour: 13, min: 0 },
+  { title: 'Biology Essentials', category: 'Science', score: 92, timeTakenMinutes: 31, daysAgo: 54, hour: 17, min: 30 },
+  { title: 'English Grammar', category: 'English', score: 95, timeTakenMinutes: 18, daysAgo: 65, hour: 11, min: 0 },
+  { title: 'Reading Comprehension', category: 'English', score: 90, timeTakenMinutes: 22, daysAgo: 75, hour: 14, min: 15 },
+  { title: 'Quantitative Aptitude', category: 'Aptitude', score: 87, timeTakenMinutes: 31, daysAgo: 85, hour: 10, min: 45 },
+  { title: 'Logical Reasoning', category: 'Aptitude', score: 91, timeTakenMinutes: 24, daysAgo: 95, hour: 16, min: 0 },
+  { title: 'Current Affairs', category: 'General Knowledge', score: 85, timeTakenMinutes: 28, daysAgo: 105, hour: 12, min: 30 },
+  { title: 'Indian Constitution', category: 'General Knowledge', score: 88, timeTakenMinutes: 30, daysAgo: 115, hour: 15, min: 10 }
 ];
 
 const seedStudentDemo = async () => {
@@ -58,21 +59,20 @@ const seedStudentDemo = async () => {
     // 2. Fetch Published Exams
     const allExams = await Exam.find({ status: 'published' });
     if (allExams.length === 0) {
-      console.log('❌ No published exams found in database. Run main seeder first.');
+      console.log('❌ No published exams found in database.');
       process.exit(1);
     }
 
-    // Clear previous attempts for student@exam.com to avoid duplicates
+    // Clear previous attempts for student@exam.com
     await Attempt.deleteMany({ student: student._id });
 
-    // 3. Create 15 Completed Attempts
+    // 3. Create 15 Completed Attempts with Realistic Timestamps
     const attemptsToInsert = [];
     const now = new Date();
 
     for (let i = 0; i < studentExamsConfig.length; i++) {
       const cfg = studentExamsConfig[i];
       
-      // Match by title substring or fallback to indexed exam
       let exam = allExams.find(e => e.title.toLowerCase().includes(cfg.title.toLowerCase())) || allExams[i % allExams.length];
       const examQuestions = await Question.find({ exam: exam._id });
 
@@ -84,7 +84,7 @@ const seedStudentDemo = async () => {
 
       const submittedAt = new Date(now);
       submittedAt.setDate(submittedAt.getDate() - cfg.daysAgo);
-      submittedAt.setHours(14 - (i % 6), 15 + (i * 4) % 40);
+      submittedAt.setHours(cfg.hour, cfg.min, 0, 0);
 
       const startedAt = new Date(submittedAt.getTime() - timeTaken * 1000);
 
@@ -104,17 +104,18 @@ const seedStudentDemo = async () => {
         passed,
         timeTaken,
         submittedAt,
+        startedAt,
         createdAt: startedAt,
         updatedAt: submittedAt,
         isStudentDemo: true
       });
     }
 
-    // Sort chronologically by submittedAt
-    attemptsToInsert.sort((a, b) => a.submittedAt - b.submittedAt);
+    // Sort chronologically newest first
+    attemptsToInsert.sort((a, b) => b.submittedAt - a.submittedAt);
 
     await Attempt.insertMany(attemptsToInsert);
-    console.log(`✓ Linked ${attemptsToInsert.length} exam attempts`);
+    console.log(`✓ Linked ${attemptsToInsert.length} exam attempts with realistic dynamic timestamps`);
 
     console.log('✓ Dashboard statistics generated');
     console.log('✓ Leaderboard updated');

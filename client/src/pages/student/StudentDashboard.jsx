@@ -6,6 +6,7 @@ import PerformanceTrendChart from '../../components/PerformanceTrendChart';
 import { BookOpen, Target, Award, CheckCircle, Clock, ArrowRight, Activity, Calendar } from 'lucide-react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { LightPieTooltip } from '../../components/common/LightChartTooltip';
+import { formatAttemptDate } from '../../utils/dateUtils';
 import { Link } from 'react-router-dom';
 import api from '../../api/axios';
 
@@ -248,7 +249,7 @@ const StudentDashboard = () => {
 
                   <div className="flex items-center justify-between text-xs text-gray-500 dark:text-[#94A3B8] pt-2 border-t border-gray-200/50 dark:border-[#2A3441]">
                     <span className="font-bold text-gray-900 dark:text-[#F8FAFC]">{att.percentage ? att.percentage.toFixed(0) : 0}%</span>
-                    <span>{new Date(att.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                    <span>{formatAttemptDate(att.submittedAt || att.startedAt || att.createdAt)}</span>
                   </div>
                 </Link>
               ))}

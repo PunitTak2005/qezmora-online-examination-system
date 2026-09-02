@@ -3,6 +3,7 @@ import { Trophy, Medal, Star, Target, Calendar, ArrowUpRight, ArrowDownRight, Mi
 import api from '../../api/axios';
 import PageTransition from '../../components/PageTransition';
 import LoadingSkeleton from '../../components/LoadingSkeleton';
+import UserAvatar from '../../components/common/UserAvatar';
 import { motion } from 'framer-motion';
 
 // Full multi-word institution sample entries for responsive multi-line testing
@@ -11,12 +12,12 @@ const SAMPLE_LEADERBOARD = {
     { _id: '1', rank: 1, student: { name: 'Aarav Sharma', college: 'Indian Institute of Technology, Delhi', avatar: '' }, totalScore: 286, avgPercentage: 94.7, examsCompleted: 15, rankChange: 0, color: 'from-amber-400 via-yellow-500 to-amber-600' },
     { _id: '2', rank: 2, student: { name: 'Priya Verma', college: 'National Institute of Technology, Trichy', avatar: '' }, totalScore: 278, avgPercentage: 93.8, examsCompleted: 14, rankChange: 1, color: 'from-slate-300 via-gray-400 to-slate-500' },
     { _id: '3', rank: 3, student: { name: 'Rohan Mehta', college: 'BITS Pilani University', avatar: '' }, totalScore: 271, avgPercentage: 92.6, examsCompleted: 14, rankChange: -1, color: 'from-amber-600 via-amber-700 to-amber-900' },
-    { _id: '4', rank: 4, student: { name: 'Neha Singh', college: 'Indian Institute of Technology, Bombay', avatar: '' }, totalScore: 264, avgPercentage: 91.9, examsCompleted: 13, rankChange: 2, color: 'from-emerald-500 to-teal-700' },
+    { _id: '4', rank: 4, student: { name: 'Rahul Verma', college: 'Techno NJR Institute of Technology', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=256&q=80' }, totalScore: 264, avgPercentage: 91.9, examsCompleted: 13, rankChange: 2, color: 'from-emerald-500 to-teal-700' },
     { _id: '5', rank: 5, student: { name: 'Arjun Kapoor', college: 'International Institute of Information Technology, Hyderabad', avatar: '' }, totalScore: 258, avgPercentage: 90.8, examsCompleted: 13, rankChange: 0, color: 'from-indigo-500 to-purple-700' },
     { _id: '6', rank: 6, student: { name: 'Kavya Nair', college: 'Vellore Institute of Technology', avatar: '' }, totalScore: 251, avgPercentage: 89.5, examsCompleted: 12, rankChange: -2, color: 'from-pink-500 to-rose-700' },
     { _id: '7', rank: 7, student: { name: 'Aditya Rao', college: 'SRM Institute of Science and Technology', avatar: '' }, totalScore: 244, avgPercentage: 88.9, examsCompleted: 12, rankChange: 1, color: 'from-blue-500 to-cyan-700' },
     { _id: '8', rank: 8, student: { name: 'Ishita Jain', college: 'Delhi Technological University', avatar: '' }, totalScore: 238, avgPercentage: 88.1, examsCompleted: 11, rankChange: 3, color: 'from-violet-500 to-purple-800' },
-    { _id: '9', rank: 9, student: { name: 'Rahul Joshi', college: 'Techno NJR Institute of Technology', avatar: '' }, totalScore: 232, avgPercentage: 87.4, examsCompleted: 11, rankChange: -1, color: 'from-amber-600 to-orange-700' },
+    { _id: '9', rank: 9, student: { name: 'Rahul Joshi', college: 'Techno NJR Institute of Technology', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=256&q=80' }, totalScore: 232, avgPercentage: 87.4, examsCompleted: 11, rankChange: -1, color: 'from-amber-600 to-orange-700' },
     { _id: '10', rank: 10, student: { name: 'Sneha Patel', college: 'Nirma University of Science & Technology', avatar: '' }, totalScore: 226, avgPercentage: 86.8, examsCompleted: 10, rankChange: 0, color: 'from-green-500 to-emerald-700' },
     { _id: '11', rank: 11, student: { name: 'Vivek Kumar', college: 'Manipal Institute of Technology', avatar: '' }, totalScore: 220, avgPercentage: 85.9, examsCompleted: 10, rankChange: 2, color: 'from-cyan-500 to-blue-700' },
     { _id: '12', rank: 12, student: { name: 'Ananya Roy', college: 'Indian Institute of Technology, Madras', avatar: '' }, totalScore: 215, avgPercentage: 85.2, examsCompleted: 9, rankChange: -1, color: 'from-fuchsia-500 to-pink-700' },
@@ -261,11 +262,12 @@ const LeaderboardPage = () => {
                       {/* Avatar */}
                       <div className="mt-4 mb-4 relative">
                         <div className={`w-24 h-24 md:w-28 md:h-28 rounded-full border-4 ${badge.borderColor} flex items-center justify-center font-black text-3xl text-white shadow-xl bg-gradient-to-tr ${student.color || 'from-primary to-secondary'} overflow-hidden relative z-10`}>
-                          {student.student.avatar ? (
-                            <img src={student.student.avatar} alt={student.student.name} className="w-full h-full object-cover" />
-                          ) : (
-                            student.student.name.charAt(0).toUpperCase()
-                          )}
+                          <UserAvatar 
+                            src={student.student?.avatar} 
+                            name={student.student?.name} 
+                            className="w-full h-full object-cover" 
+                            textClassName="text-3xl font-black"
+                          />
                         </div>
                         <div className="absolute -bottom-2 -right-1 bg-white dark:bg-gray-900 px-2 py-0.5 rounded-full shadow border border-gray-200 dark:border-gray-700 z-20">
                           {renderRankChange(student.rankChange)}
@@ -341,15 +343,17 @@ const LeaderboardPage = () => {
                         {/* Student Details */}
                         <td className="py-4 px-6 min-w-[260px]">
                           <div className="flex items-center gap-3.5">
-                            <div className={`w-10 h-10 rounded-full bg-gradient-to-tr ${student.color || 'from-primary to-secondary'} text-white flex items-center justify-center font-extrabold text-sm overflow-hidden shrink-0 shadow-sm`}>
-                              {student.student.avatar ? (
-                                <img src={student.student.avatar} alt={student.student.name} className="w-full h-full object-cover" />
-                              ) : (
-                                student.student.name.charAt(0).toUpperCase()
-                              )}
+                            <div className="w-12 h-12 rounded-full border-2 border-emerald-600/40 shadow-md hover:scale-105 transition-transform overflow-hidden shrink-0">
+                              <UserAvatar 
+                                src={student.student?.avatar} 
+                                name={student.student?.name} 
+                                className="w-full h-full object-cover" 
+                                textClassName="text-sm font-extrabold"
+                              />
                             </div>
                             <div>
-                              <p className="font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">{student.student.name}</p>
+                              <p className="font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">{student.student?.name}</p>
+                              <p className="text-xs text-gray-400 font-medium truncate max-w-[200px]">{student.student?.college || 'Techno NJR Institute of Technology'}</p>
                             </div>
                           </div>
                         </td>
@@ -407,12 +411,13 @@ const LeaderboardPage = () => {
                       <div className="font-black text-lg text-gray-900 dark:text-white w-7 text-center">
                         #{student.rank}
                       </div>
-                      <div className={`w-10 h-10 rounded-full bg-gradient-to-tr ${student.color || 'from-primary to-secondary'} text-white flex items-center justify-center font-extrabold text-sm shadow-sm overflow-hidden shrink-0`}>
-                        {student.student.avatar ? (
-                          <img src={student.student.avatar} alt={student.student.name} className="w-full h-full object-cover" />
-                        ) : (
-                          student.student.name.charAt(0).toUpperCase()
-                        )}
+                      <div className="w-12 h-12 rounded-full border-2 border-emerald-600/40 shadow-sm overflow-hidden shrink-0">
+                        <UserAvatar 
+                          src={student.student?.avatar} 
+                          name={student.student?.name} 
+                          className="w-full h-full object-cover" 
+                          textClassName="text-xs font-bold"
+                        />
                       </div>
                       <div className="min-w-0">
                         <h4 className="font-bold text-gray-900 dark:text-white text-base truncate">{student.student.name}</h4>

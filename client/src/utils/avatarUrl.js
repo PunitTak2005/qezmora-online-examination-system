@@ -6,12 +6,12 @@ export const getAvatarUrl = (avatar) => {
   if (!avatar) return null;
 
   // Blob URLs or external URLs
-  if (avatar.startsWith('http://') || avatar.startsWith('https://') || avatar.startsWith('blob:')) {
+  if (avatar.startsWith('http://') || avatar.startsWith('https://') || avatar.startsWith('blob:') || avatar.startsWith('data:')) {
     return avatar;
   }
 
-  // Derive backend base URL from VITE_API_URL or default to localhost:9004
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:9004/api';
+  // Derive backend base URL from VITE_API_URL or default to Render backend
+  const apiUrl = import.meta.env.VITE_API_URL || 'https://qezmora-online-examination-system.onrender.com/api';
   const serverBase = apiUrl.replace(/\/api\/?$/, '');
 
   const cleanPath = avatar.startsWith('/') ? avatar : `/${avatar}`;

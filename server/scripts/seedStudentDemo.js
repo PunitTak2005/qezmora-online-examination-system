@@ -46,6 +46,7 @@ const seedStudentDemo = async () => {
       role: 'student',
       college: 'Techno NJR Institute of Technology',
       course: 'Computer Science',
+      avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=256&q=80',
       bio: 'Senior Computer Science student at Techno NJR Institute of Technology specializing in Web Engineering, Systems Architecture & Algorithms.'
     };
 

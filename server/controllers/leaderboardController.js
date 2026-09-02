@@ -73,7 +73,8 @@ exports.getOverallLeaderboard = async (req, res, next) => {
           avgTimeTaken: { $round: ['$avgTimeTaken', 0] },
           student: {
             name: '$studentDetails.name',
-            avatar: '$studentDetails.avatar',
+            email: '$studentDetails.email',
+            avatar: { $ifNull: ['$studentDetails.avatar', '$studentDetails.profileImage'] },
             college: '$studentDetails.college'
           }
         }

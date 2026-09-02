@@ -10,6 +10,7 @@
     "seed:history": "node scripts/seedExamHistory.js",
     "seed:johnsmith": "node scripts/seedJohnSmith.js",
     "seed:english": "node scripts/seedBusinessEnglish.js",
+    "seed:rc": "node scripts/seedReadingComprehension.js",
     "seed:exams": "node scripts/seedExams.js",
     "seed:questions": "node scripts/seedQuestions.js",
     "seed:categories": "node scripts/seedCategories.js"

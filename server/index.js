@@ -49,13 +49,32 @@ app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 // Sanitize data
 app.use(mongoSanitize());
 
-// Enable CORS
-app.use(cors({ origin: process.env.FRONTEND_URL || '*' }));
+// Enable Production-Ready CORS
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
+  'http://localhost:3255',
+  'http://localhost:5173',
+  'http://localhost:3000'
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 mins
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 200 // limit each IP to 200 requests per windowMs
 });
 app.use('/api', limiter);
 
@@ -67,14 +86,13 @@ if (process.env.NODE_ENV === 'development') {
 // Set static folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Health check
+// Health check endpoint for Render
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
-    port: process.env.PORT || 9004,
-    database: 'connected',
-    success: true,
-    message: 'API is running smoothly'
+    service: 'Qezmora Backend API',
+    environment: process.env.NODE_ENV || 'production',
+    timestamp: new Date().toISOString()
   });
 });
 

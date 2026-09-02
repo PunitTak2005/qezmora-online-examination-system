@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import api from '../api/axios';
 import PageTransition from '../components/PageTransition';
-import { User, Mail, Lock, ShieldCheck, CheckCircle2, AlertCircle } from 'lucide-react';
+import { User, Mail, Lock, ShieldCheck, CheckCircle2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const RegisterPage = () => {
@@ -17,6 +17,8 @@ const RegisterPage = () => {
   } = useForm({ mode: 'onChange' });
   
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, text: '', color: 'bg-gray-200' });
   const navigate = useNavigate();
   
@@ -162,7 +164,7 @@ const RegisterPage = () => {
                 </div>
                 <input
                   id="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   {...register('password', { 
                     required: 'Password is required',
@@ -172,9 +174,17 @@ const RegisterPage = () => {
                       message: 'Must contain uppercase, lowercase, and a number'
                     }
                   })}
-                  className={`input-base pl-11 ${errors.password ? 'border-danger focus:ring-danger/20' : ''}`}
+                  className={`input-base pl-11 pr-11 ${errors.password ? 'border-danger focus:ring-danger/20' : ''}`}
                   placeholder="••••••••"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-r-lg"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
+                </button>
               </div>
               <InputError error={errors.password} />
               
@@ -213,15 +223,23 @@ const RegisterPage = () => {
                 </div>
                 <input
                   id="confirmPassword"
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   {...register('confirmPassword', { 
                     required: 'Please confirm your password',
                     validate: value => value === password || 'Passwords do not match'
                   })}
-                  className={`input-base pl-11 ${errors.confirmPassword ? 'border-danger focus:ring-danger/20' : ''}`}
+                  className={`input-base pl-11 pr-11 ${errors.confirmPassword ? 'border-danger focus:ring-danger/20' : ''}`}
                   placeholder="••••••••"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-primary rounded-r-lg"
+                  aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                >
+                  {showConfirmPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
+                </button>
               </div>
               <InputError error={errors.confirmPassword} />
             </div>
@@ -253,5 +271,3 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
-
-

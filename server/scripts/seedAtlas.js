@@ -275,8 +275,7 @@ const seedAtlas = async () => {
     console.log('🛡️ Seeding Exam Security Violations...');
     const violationsCount = await ExamViolation.countDocuments();
     if (violationsCount < 15) {
-      const violationTypes = ['visibilitychange', 'fullscreenchange', 'blur', 'devtools_attempt'];
-      const severityLevels = ['low', 'medium', 'high'];
+      const violationTypes = ['fullscreen_exit', 'tab_switch', 'window_blur', 'devtools_open', 'copy_paste_attempt'];
       
       for (let i = 0; i < 16; i++) {
         const student = createdStudents[i % createdStudents.length];
@@ -285,8 +284,8 @@ const seedAtlas = async () => {
           student: student._id,
           exam: exam._id,
           type: violationTypes[i % violationTypes.length],
-          details: `System detected anti-cheating violation event trigger #${i + 1}`,
-          severity: severityLevels[i % severityLevels.length],
+          warningNumber: (i % 3) + 1,
+          metadata: { details: `System detected anti-cheating violation event trigger #${i + 1}` },
           timestamp: new Date(Date.now() - (i * 3600000))
         });
       }

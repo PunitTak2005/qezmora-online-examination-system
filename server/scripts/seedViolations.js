@@ -21,25 +21,25 @@ const seedViolations = async () => {
           {
             student: student._id,
             exam: exam._id,
-            type: 'visibilitychange',
-            details: 'Tab switched to external browser window',
-            severity: 'high',
+            type: 'tab_switch',
+            warningNumber: 2,
+            metadata: { details: 'Tab switched to external browser window' },
             timestamp: new Date(Date.now() - 3600000)
           },
           {
             student: student._id,
             exam: exam._id,
-            type: 'fullscreenchange',
-            details: 'Exited secure fullscreen mode via ESC key',
-            severity: 'medium',
+            type: 'fullscreen_exit',
+            warningNumber: 1,
+            metadata: { details: 'Exited secure fullscreen mode via ESC key' },
             timestamp: new Date(Date.now() - 7200000)
           },
           {
             student: student._id,
             exam: exam._id,
-            type: 'blur',
-            details: 'Window lost focus for 12 seconds',
-            severity: 'low',
+            type: 'window_blur',
+            warningNumber: 1,
+            metadata: { details: 'Window lost focus for 12 seconds' },
             timestamp: new Date(Date.now() - 10800000)
           }
         ]);

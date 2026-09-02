@@ -13,6 +13,7 @@
     "seed:rc": "node scripts/seedReadingComprehension.js",
     "seed:grammar": "node scripts/seedEnglishGrammar.js",
     "seed:constitution": "node scripts/seedIndianConstitution.js",
+    "seed:englishexams": "node scripts/seedEnglishExams.js",
     "seed:exams": "node scripts/seedExams.js",
     "seed:questions": "node scripts/seedQuestions.js",
     "seed:categories": "node scripts/seedCategories.js"

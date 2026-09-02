@@ -35,7 +35,9 @@ router.delete('/avatar', protect, removeAvatar);
 router.get('/dashboard-stats', protect, isAdmin, getDashboardStats);
 router.get('/stats/admin', protect, isAdmin, getDashboardStats);
 router.get('/stats/student', protect, getStudentStats);
+router.get('/student-stats', protect, getStudentStats);
 router.get('/stats/teacher', protect, isAdminOrTeacher, getTeacherStats);
+router.get('/teacher-stats', protect, isAdminOrTeacher, getTeacherStats);
 
 // Admin user management routes (Requires Admin)
 router.get('/', protect, isAdmin, getUsers);

@@ -159,23 +159,42 @@ exports.getStudentStats = async (req, res, next) => {
     const attempts = await Attempt.find({ student: req.user.id });
     
     let totalScore = 0;
-    let passedExams = 0;
+    let passCount = 0;
+    let failCount = 0;
+    let maxScore = 0;
     
     attempts.forEach(a => {
-      totalScore += a.percentage;
-      if (a.passed) passedExams++;
+      const pct = a.percentage || 0;
+      totalScore += pct;
+      if (pct > maxScore) maxScore = pct;
+      if (a.passed) {
+        passCount++;
+      } else {
+        failCount++;
+      }
     });
     
-    const avgScore = attempts.length > 0 ? (totalScore / attempts.length).toFixed(2) : 0;
+    const avgScore = attempts.length > 0 ? Number((totalScore / attempts.length).toFixed(2)) : 0;
+    const passRate = attempts.length > 0 ? Math.round((passCount / attempts.length) * 100) : 0;
     const monthlyTrend = build12MonthsTrend(attempts);
 
     res.status(200).json({
       success: true,
       data: {
         examsTaken: attempts.length,
-        passedExams,
-        avgScore: Number(avgScore),
-        monthlyTrend
+        totalAttempts: attempts.length,
+        passedExams: passCount,
+        failedExams: failCount,
+        passCount,
+        failCount,
+        passRate,
+        avgScore,
+        bestScore: Math.round(maxScore),
+        monthlyTrend,
+        passFailData: [
+          { name: 'Pass', value: passCount },
+          { name: 'Fail', value: failCount }
+        ]
       }
     });
   } catch (error) {

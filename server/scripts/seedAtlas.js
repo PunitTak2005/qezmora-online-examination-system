@@ -94,15 +94,54 @@ const seedAtlas = async () => {
 
     // 2. Seed Demo Users (Admin, Teacher, Student + 15 Students)
     console.log('👥 Seeding Production Users...');
-    const hashedPassword = await bcrypt.hash('Admin@123', 10);
-    const studentPassword = await bcrypt.hash('Student@123', 10);
+    const defaultPassword = await bcrypt.hash('Password123!', 10);
+    const altPassword = await bcrypt.hash('Admin@123', 10);
 
+    // Primary Test Credentials matching LoginPage.jsx hints
+    const adminExam = await User.findOneAndUpdate(
+      { email: 'admin@exam.com' },
+      {
+        name: 'Admin User',
+        email: 'admin@exam.com',
+        password: defaultPassword,
+        role: 'admin',
+        college: 'Qezmora Academic Headquarters'
+      },
+      { upsert: true, new: true }
+    );
+
+    const teacherExam = await User.findOneAndUpdate(
+      { email: 'teacher@exam.com' },
+      {
+        name: 'Dr. Sarah Johnson',
+        email: 'teacher@exam.com',
+        password: defaultPassword,
+        role: 'teacher',
+        college: 'Department of Computer Science'
+      },
+      { upsert: true, new: true }
+    );
+
+    const studentExam = await User.findOneAndUpdate(
+      { email: 'student@exam.com' },
+      {
+        name: 'John Smith',
+        email: 'student@exam.com',
+        password: defaultPassword,
+        role: 'student',
+        college: 'Qezmora Technology Institute',
+        course: 'Computer Science'
+      },
+      { upsert: true, new: true }
+    );
+
+    // Qezmora Domain Accounts
     const adminUser = await User.findOneAndUpdate(
       { email: 'admin@qezmora.com' },
       {
         name: 'Admin User',
         email: 'admin@qezmora.com',
-        password: hashedPassword,
+        password: defaultPassword,
         role: 'admin',
         college: 'Qezmora Academic Headquarters'
       },
@@ -114,7 +153,7 @@ const seedAtlas = async () => {
       {
         name: 'Dr. Sarah Johnson',
         email: 'teacher@qezmora.com',
-        password: hashedPassword,
+        password: defaultPassword,
         role: 'teacher',
         college: 'Department of Computer Science'
       },
@@ -126,7 +165,7 @@ const seedAtlas = async () => {
       {
         name: 'John Smith',
         email: 'student@qezmora.com',
-        password: studentPassword,
+        password: defaultPassword,
         role: 'student',
         college: 'Qezmora Technology Institute',
         course: 'Computer Science'
@@ -134,21 +173,20 @@ const seedAtlas = async () => {
       { upsert: true, new: true }
     );
 
-    const createdStudents = [demoStudent];
+    const createdStudents = [studentExam, demoStudent];
     for (const s of studentsList) {
       const studentDoc = await User.findOneAndUpdate(
         { email: s.email },
         {
           name: s.name,
           email: s.email,
-          password: studentPassword,
+          password: defaultPassword,
           role: 'student',
           college: s.college,
           course: 'Engineering & Science'
         },
         { upsert: true, new: true }
       );
-      createdStudents.push(studentDoc);
     }
     const userCount = await User.countDocuments();
     console.log(`✓ Production Users Seeded: ${userCount}`);

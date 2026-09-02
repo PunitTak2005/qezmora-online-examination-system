@@ -14,6 +14,7 @@
     "seed:grammar": "node scripts/seedEnglishGrammar.js",
     "seed:constitution": "node scripts/seedIndianConstitution.js",
     "seed:englishexams": "node scripts/seedEnglishExams.js",
+    "seed:allexams": "node scripts/seedExams.js && node scripts/seedAllExamQuestions.js",
     "seed:exams": "node scripts/seedExams.js",
     "seed:questions": "node scripts/seedQuestions.js",
     "seed:categories": "node scripts/seedCategories.js"

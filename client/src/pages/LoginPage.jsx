@@ -6,25 +6,29 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import PageTransition from '../components/PageTransition';
-import { Eye, EyeOff, Mail, Lock, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, AlertCircle, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({ mode: 'onChange' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const onSubmit = async (data) => {
     setLoading(true);
+    setServerError('');
     try {
       const response = await api.post('/auth/login', data);
       login(response.data.user, response.data.token);
       toast.success(`Welcome back, ${response.data.user.name.split(' ')[0]}!`);
       navigate(`/${response.data.user.role}/dashboard`);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Login failed. Please check credentials.');
+      const errorMsg = error.response?.data?.message || 'Incorrect email or password. Please try again.';
+      setServerError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -70,7 +74,7 @@ const LoginPage = () => {
             className="w-full max-w-md"
             aria-labelledby="login-heading"
           >
-            <header className="text-center mb-10">
+            <header className="text-center mb-8">
               <div className="flex justify-center mb-6">
                 <img src="/logo/qezmora-logo-primary.png" alt="Qezmora" className="h-12 hidden dark:hidden sm:block mx-auto" />
                 <img src="/logo/qezmora-logo-inverted.png" alt="Qezmora" className="h-12 hidden dark:sm:block mx-auto" />
@@ -79,6 +83,24 @@ const LoginPage = () => {
               <h1 id="login-heading" className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Sign In</h1>
               <p className="text-gray-500 dark:text-gray-400 mt-2 font-medium">Qezmora — Smart Exams. Simplified.</p>
             </header>
+
+            {/* Server Error Alert Banner */}
+            <AnimatePresence>
+              {serverError && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mb-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 flex items-start gap-3 shadow-sm"
+                >
+                  <XCircle className="w-5 h-5 shrink-0 text-rose-500 mt-0.5" />
+                  <div className="flex-1">
+                    <h4 className="font-extrabold text-sm text-rose-800 dark:text-rose-200">Authentication Failed</h4>
+                    <p className="text-xs mt-0.5 font-medium leading-relaxed">{serverError}</p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div>
@@ -98,7 +120,8 @@ const LoginPage = () => {
                         message: 'Please enter a valid email address'
                       }
                     })}
-                    className={`input-base pl-11 ${errors.email ? 'border-danger focus:ring-danger/20' : ''}`}
+                    onChange={() => { if (serverError) setServerError(''); }}
+                    className={`input-base pl-11 ${errors.email || serverError ? 'border-danger focus:ring-danger/20' : ''}`}
                     placeholder="you@example.com"
                   />
                 </div>
@@ -119,7 +142,8 @@ const LoginPage = () => {
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="current-password"
                     {...register('password', { required: 'Password is required' })}
-                    className={`input-base pl-11 pr-11 ${errors.password ? 'border-danger focus:ring-danger/20' : ''}`}
+                    onChange={() => { if (serverError) setServerError(''); }}
+                    className={`input-base pl-11 pr-11 ${errors.password || serverError ? 'border-danger focus:ring-danger/20' : ''}`}
                     placeholder="••••••••"
                   />
                   <button
@@ -137,7 +161,7 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn btn-primary w-full py-3.5 text-lg mt-2"
+                className="btn btn-primary w-full py-3.5 text-lg mt-2 shadow-lg shadow-primary/25"
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -148,24 +172,13 @@ const LoginPage = () => {
               </button>
             </form>
 
-            <div className="mt-8 text-center">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Don't have an account? <Link to="/register" className="font-bold text-primary hover:underline transition-all">Create Account</Link>
-              </p>
-            </div>
-
-            <div className="mt-10 p-5 bg-cream dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700/50">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Test Credentials</p>
-              <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400 font-mono">
-                <li className="flex justify-between"><span>Admin:</span> <span className="font-semibold">admin@exam.com</span></li>
-                <li className="flex justify-between"><span>Teacher:</span> <span className="font-semibold">teacher@exam.com</span></li>
-                <li className="flex justify-between"><span>Student:</span> <span className="font-semibold">student@exam.com</span></li>
-                <li className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 flex justify-between">
-                  <span className="font-sans">Password:</span> <span className="font-semibold text-primary">Password123!</span>
-                </li>
-              </ul>
-              </div>
-            </motion.section>
+            <p className="mt-8 text-center text-gray-600 dark:text-gray-400 font-medium">
+              Don't have an account?{' '}
+              <Link to="/register" className="text-primary hover:text-primary/80 font-bold hover:underline transition-all">
+                Create Account
+              </Link>
+            </p>
+          </motion.section>
         </div>
       </div>
     </PageTransition>
@@ -173,5 +186,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-

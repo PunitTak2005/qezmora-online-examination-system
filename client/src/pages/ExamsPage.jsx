@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion';
 import { Search, Clock, FileText, Award, Filter, BookOpen, Calculator, FlaskConical, Languages, Lightbulb, Globe, Calendar, RefreshCcw, ChevronRight, ChevronLeft, Users, CheckCircle2 } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import Logo from '../components/common/Logo';
+import ExamCard from '../components/ExamCard';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 
@@ -291,81 +292,17 @@ const ExamsPage = () => {
             </div>
 
             {loading ? (
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
                 {[1, 2, 3, 4, 5, 6].map(i => (
-                  <div key={i} className="bg-white dark:bg-darkSurface h-64 rounded-3xl animate-pulse"></div>
+                  <div key={i} className="bg-white dark:bg-darkSurface h-80 rounded-2xl animate-pulse"></div>
                 ))}
               </div>
             ) : currentExams.length > 0 ? (
               <>
-                <div className="grid md:grid-cols-2 gap-6 mb-12">
-                  {currentExams.map((exam, idx) => {
-                    const displaySubject = exam.subject || (exam.category && typeof exam.category === 'object' ? exam.category.name : exam.category) || 'General';
-                    const displayDifficulty = exam.difficulty === 'easy' ? 'Beginner' : exam.difficulty === 'hard' ? 'Advanced' : (exam.difficulty || 'Intermediate');
-                    
-                    return (
-                      <motion.div
-                        key={exam._id || idx}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.05 }}
-                        whileHover={{ y: -5 }}
-                        className="bg-white dark:bg-darkSurface rounded-3xl p-6 md:p-8 flex flex-col border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:shadow-primary/10 transition-all group relative overflow-hidden"
-                      >
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -z-10 group-hover:bg-gold/10 transition-colors"></div>
-                        
-                        <div className="flex justify-between items-start mb-6">
-                          <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-primary/10">
-                            {displaySubject.toLowerCase().includes('programming') ? (
-                              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-                            ) : displaySubject.toLowerCase().includes('math') ? (
-                              <Calculator className="w-7 h-7" />
-                            ) : displaySubject.toLowerCase().includes('science') ? (
-                              <FlaskConical className="w-7 h-7" />
-                            ) : displaySubject.toLowerCase().includes('english') ? (
-                              <Languages className="w-7 h-7" />
-                            ) : displaySubject.toLowerCase().includes('aptitude') ? (
-                              <Lightbulb className="w-7 h-7" />
-                            ) : (
-                              <Globe className="w-7 h-7" />
-                            )}
-                          </div>
-                          <span className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold rounded-full uppercase tracking-wider border border-gray-200 dark:border-gray-700 shadow-sm">
-                            Auto-Graded
-                          </span>
-                        </div>
-                        
-                        <div className="mb-2">
-                          <span className="text-xs font-bold text-gold uppercase tracking-wider">{displaySubject}</span>
-                        </div>
-                        
-                        <div className="min-h-[64px] flex items-start mb-6">
-                          <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white leading-tight break-words whitespace-normal group-hover:text-primary transition-colors">
-                            {exam.title}
-                          </h3>
-                        </div>
-                        
-                        <div className="space-y-3 mt-auto mb-8 border-t border-gray-50 dark:border-gray-800/50 pt-6">
-                          <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
-                            <Clock className="w-5 h-5 text-gray-400" /> <span className="font-medium">{exam.duration} Minutes</span>
-                          </div>
-                          <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
-                            <FileText className="w-5 h-5 text-gray-400" /> <span className="font-medium">{exam.questionCount || exam.totalMarks || 20} Questions</span>
-                          </div>
-                          <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
-                            <Award className="w-5 h-5 text-gray-400" /> <span className="font-medium capitalize">{displayDifficulty}</span>
-                          </div>
-                        </div>
-                        
-                        <button 
-                          onClick={() => handleStartExam(exam._id)}
-                          className="btn bg-primary hover:bg-primary-dark text-white w-full py-4 rounded-xl font-bold transition-all text-center shadow-lg shadow-primary/20"
-                        >
-                          Start Exam
-                        </button>
-                      </motion.div>
-                    );
-                  })}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
+                  {currentExams.map((exam, idx) => (
+                    <ExamCard key={exam._id || idx} exam={exam} role="student" delay={idx * 0.04} />
+                  ))}
                 </div>
 
                 {/* Phase 11 - Pagination */}

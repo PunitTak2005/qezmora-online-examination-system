@@ -6,6 +6,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "seed": "node scripts/seedAtlas.js",
+    "seed:student": "node scripts/seedStudentDemo.js",
     "seed:history": "node scripts/seedExamHistory.js",
     "seed:johnsmith": "node scripts/seedJohnSmith.js",
     "seed:exams": "node scripts/seedExams.js",
